@@ -9,36 +9,42 @@
 	$email = $_POST["email"];
 	$telefono = $_POST["telefono"];
 	$stato = $_POST["stato"];
-	$regione = $_POST["regione"];
-	$provincia = $_POST["provincia"];
-	$castello = $_POST["castello"];
+	if($stato == "Italia") {		
+		$regione = $_POST["regione"];
+		$provincia = $_POST["provincia"];
+	} else {
+		$castello = $_POST["castello"];		
+	}
 	$indirizzo = $_POST["indirizzo"];
 	$userName = $_POST["userName"];
 	$password = $_POST["password"];
 	
+	$output = array();
 	
 	//controlla se username esiste già, se si avvisa l'utente failure, username diverso...
-	$query = "SELECT Nome FROM Persona WHERE userName= '$username'";
+	$query = "SELECT Nome FROM Persona WHERE userName= '$userName'";
 	$result = $mysqli->query($query);
 	if ($result->num_rows > 0) { //username esiste già, inserirne un'altro 
-		//(JSON: "result:failure, errorMessage:username già presente")
+		$output['result'] = "false";
+		$output['data'] = "Username già presente, inserirne un altro";
 	} else {		
-		if($_POST["stato"] == "San Marino") {
+		if($stato == "San Marino") {
 			$query = "INSERT INTO `persona`(`Nome`, `Cognome`, `Sesso`, `DataNascita`, `Email`, `Telefono`, `Stato`, `Castello`, `Indirizzo`, `Privilegio`, `UserName`, `Password`) VALUES ('$nome', '$cognome', '$sesso', '$dataNascita', '$email', '$telefono', '$stato', '$castello', '$indirizzo', 'utente generico', '$userName', '$password')";
 		} else {
 			$query = "INSERT INTO `persona`(`Nome`, `Cognome`, `Sesso`, `DataNascita`, `Email`, `Telefono`, `Stato`, `Regione`, `Provincia`, `Indirizzo`, `Privilegio`, `UserName`, `Password`) VALUES ('$nome', '$cognome', '$sesso', '$dataNascita', '$email', '$telefono', '$stato', '$regione', '$provincia', '$indirizzo', 'utente generico', '$userName', '$password')";
 		}
 		
+		
 		if ($mysqli->query($query) === TRUE) { 
-			//(JSON: "result:success")
+			$output['result'] = true;	
+			$output['data'] = "Registrazione avvenuta con successo";
    	    } else { 
-			//(JSON: "result:failure, errorMessage:errore nell'eseguire la query.  Error: " . $query . "::" . $mysqli->error)
+			$output['result'] = false;
+			$output['data'] = "Errore nell'eseguire la query nel database. Error: " . $query . "::" . $mysqli->error;
 		} 
 	}
 	
-
-	
-	//print json_encode($jsonString);
+	print json_encode($output);
 	
 	$mysqli->close();
 ?>

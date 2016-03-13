@@ -59,6 +59,7 @@
 					echo "Error: " . $query . "<br>" . $mysqli->error;
 				} ?>
 				<br/>
+				
 				<a href='MenuPrincipale.php'>Torna al menu principale</a>
 <?php		}		
 			$mysqli->close(); ?>

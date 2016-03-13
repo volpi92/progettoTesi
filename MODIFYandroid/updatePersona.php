@@ -10,28 +10,35 @@
 	$email = $_POST["email"];
 	$telefono = $_POST["telefono"];
 	$stato = $_POST["stato"];
-	$regione = $_POST["regione"];
-	$provincia = $_POST["provincia"];
-	$castello = $_POST["castello"];
+	if($stato == "Italia") {		
+		$regione = $_POST["regione"];
+		$provincia = $_POST["provincia"];
+	} else {
+		$castello = $_POST["castello"];		
+	}
 	$indirizzo = $_POST["indirizzo"];
+	$privilegio = $_POST["privilegio"];
 	
-	$response = array();
+	
+	$output = array();
 	
 	if($stato == "Italia") {
-		$querty = "UPDATE `persona` SET `Nome`= '$nome', `Cognome`='$cognome', `Sesso`='$sesso', `DataNascita`='$dataNascita', `Email`='$email', `Telefono`='$telefono', `Stato`='$stato', `Regione`='$regione', `Provincia`= '$provincia', `Indirizzo`='$indirizzo' WHERE `idPersona` = '$idPersona'";
+		$query = "UPDATE `persona` SET `Nome`= '$nome', `Cognome`='$cognome', `Sesso`='$sesso', `DataNascita`='$dataNascita', `Email`='$email', `Telefono`='$telefono', `Stato`='$stato', `Regione`='$regione', `Provincia`= '$provincia', `Castello` = NULL, `Indirizzo`='$indirizzo', `Privilegio`='$privilegio' WHERE `idPersona` = '$idPersona'";
 	} else {
-		$querty = "UPDATE `persona` SET `Nome`= '$nome', `Cognome`='$cognome', `Sesso`='$sesso', `DataNascita`='$dataNascita', `Email`='$email', `Telefono`='$telefono', `Stato`='$stato', `Castello`='$castello', `Indirizzo`='$indirizzo' WHERE `idPersona` = '$idPersona'";
+		$query = "UPDATE `persona` SET `Nome`= '$nome', `Cognome`='$cognome', `Sesso`='$sesso', `DataNascita`='$dataNascita', `Email`='$email', `Telefono`='$telefono', `Stato`='$stato', `Regione`= NULL, `Provincia`= NULL, `Castello`='$castello', `Indirizzo`='$indirizzo', `Privilegio`='$privilegio' WHERE `idPersona` = '$idPersona'";
 	}
 	
 	
 	
 	if ($mysqli->query($query) === TRUE) { 
-		$response['success'] = "true";
+		$output['result'] = "true";
+		$output['data'] = "Modifica effettuata con successo";
 	} else { 
-		$response['success'] = "false";
+		$response['result'] = "false";
+		$output['data'] = "Errore nell'eseguire la query. Error: " . $query . "::" . $mysqli->error;
 	} 
 	
-	print json_encode($response);
+	print json_encode($output);
 	
 	
 	$mysqli->close();

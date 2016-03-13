@@ -7,7 +7,7 @@
 		$userName = $_POST["userName"];
 		$password = $_POST["password"];
 	
-		$query = "SELECT nome, cognome, sesso, datanascita, email, telefono, stato, regione, provincia, castello, indirizzo, privilegio FROM `persona` WHERE userName = '$userName' AND password = '$password'";
+		$query = "SELECT * FROM `persona` WHERE userName = '$userName' AND password = '$password'";
 		$result = $mysqli->query($query);
 		if ($result->num_rows > 0) { 
 			$row = $result->fetch_assoc();
@@ -23,4 +23,5 @@
 		$output['data'] = "userName e password non settati nel post";
 	}
 	print json_encode($output);
+	$mysqli->close();
 ?>
